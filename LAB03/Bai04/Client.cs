@@ -14,7 +14,7 @@ namespace Bai04
 {
     public partial class Client : Form
     {
-        private const string ServerIp = "10.229.152.89";
+        private const string ServerIp = "10.229.152.90";
         private const int ServerPort = 9000;
         private bool isConnected = false;
 

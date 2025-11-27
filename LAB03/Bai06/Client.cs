@@ -29,6 +29,7 @@ namespace Bai06
         {
             try
             {
+                btnConnect.Enabled = false;
                 btnOutRoom.Enabled = true;
                 btnGui.Enabled = true;
                 txtMessage.Enabled = true;
