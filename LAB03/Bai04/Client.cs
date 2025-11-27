@@ -14,7 +14,7 @@ namespace Bai04
 {
     public partial class Client : Form
     {
-        private const string ServerIp = "127.0.0.1";
+        private const string ServerIp = "10.229.152.89";
         private const int ServerPort = 9000;
         private bool isConnected = false;
 
@@ -304,7 +304,7 @@ namespace Bai04
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi khi đặt vé:");
+                MessageBox.Show("Lỗi khi đặt vé(kiểm tra lại kết nối)");
             }
         }
         
@@ -492,6 +492,35 @@ namespace Bai04
             }
             catch
             {
+            }
+            finally
+            {
+                this.Invoke(new Action(() =>
+                {
+                    MessageBox.Show("Mất kết nối với Server!");
+
+                    isConnected = false;
+
+                    if (tcpClient != null)
+                    {
+                        try { tcpClient.Close(); } catch { }
+                        tcpClient = null; 
+                    }
+                    sreader = null;
+                    swriter = null;
+
+                    MovieComboBox.Enabled = false;
+                    RoomComboBox.Enabled = false;
+                    BookButton.Enabled = false;
+
+                    MovieComboBox.Items.Clear();
+                    RoomComboBox.Items.Clear();
+                    foreach (var btn in seatButtons)
+                    {
+                        btn.Enabled = false;
+                        btn.BackColor = (Color)btn.Tag;
+                    }
+                }));
             }
         }
 
