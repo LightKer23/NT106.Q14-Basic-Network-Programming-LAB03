@@ -21,7 +21,6 @@ namespace Bai04
             public List<int> Rooms = new List<int>();
         }
         private readonly List<StreamWriter> clientStreams = new List<StreamWriter>();
-
         private readonly Dictionary<string, int> customerTickets =new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
         private readonly Dictionary<string, HashSet<(int movieId, int room)>> customerRooms =new Dictionary<string, HashSet<(int, int)>>(StringComparer.OrdinalIgnoreCase);
@@ -211,6 +210,7 @@ namespace Bai04
             {
                 MessageBox.Show("Không thể khởi động server: " + ex.Message);
             }
+            
         }
 
         private void StopServer()
@@ -220,6 +220,19 @@ namespace Bai04
                 running = false;
                 listener?.Stop();
                 acceptThread?.Join(300);
+                lock (clientStreams)
+                {
+                    foreach (var writer in clientStreams)
+                    {
+                        try
+                        {
+                            writer.BaseStream.Close();
+                            writer.Close();
+                        }
+                        catch { }
+                    }
+                    clientStreams.Clear(); 
+                }
                 AppendLog("Server đã dừng.");
                 SetStatus("Tắt server");
                 StartButton.Text = "Bật server (9000)";
