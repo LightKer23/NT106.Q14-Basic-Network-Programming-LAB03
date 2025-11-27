@@ -63,9 +63,17 @@ namespace Bai06
                     {
                         this.Invoke(new Action(() =>
                         {
-                            lstBoxDiaryLog.Items.Add($"{user}: {text}");
+                            var lines = text.Split('\n');
+
+                            lstBoxDiaryLog.Items.Add($"{user}: {lines[0]}");
+
+                            for (int i = 1; i < lines.Length; i++)
+                            {
+                                lstBoxDiaryLog.Items.Add("    " + lines[i].Trim());
+                            }
                         }));
                     };
+
 
                     _server.OnSys += msg =>
                     {

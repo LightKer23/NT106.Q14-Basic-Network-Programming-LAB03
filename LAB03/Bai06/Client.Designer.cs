@@ -171,6 +171,7 @@
             btnBrowse.TabIndex = 9;
             btnBrowse.Text = "...";
             btnBrowse.UseVisualStyleBackColor = true;
+            btnBrowse.Click += btnBrowse_Click;
             // 
             // btnGui
             // 

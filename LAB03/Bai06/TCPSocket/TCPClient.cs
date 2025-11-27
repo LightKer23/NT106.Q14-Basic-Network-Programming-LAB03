@@ -128,8 +128,13 @@ namespace Bai06.TCPSocket
             }
             else if (msg.StartsWith("[MSG]|"))
             {
-                var parts = msg.Split('|');
-                OnMsg?.Invoke(parts[1], parts[2]);
+                string temp = msg.Substring(6);
+
+                int i = temp.IndexOf('|');
+                string user = temp.Substring(0, i);
+                string text = temp.Substring(i + 1);
+
+                OnMsg?.Invoke(user, text);
             }
             else if (msg.StartsWith("[SYS]|"))
             {
@@ -158,7 +163,17 @@ namespace Bai06.TCPSocket
                 string msgText = parts[3];
                 OnPrivateMsg?.Invoke(roomId, from, msgText);
             }
+            else if (msg.StartsWith("[FILE]|"))
+            {
+                var parts = msg.Split('|');
+                string user = parts[1];
+                string fileName = parts[2];
+                string base64 = parts[3];
 
+                string content = Encoding.UTF8.GetString(Convert.FromBase64String(base64));
+
+                OnMsg?.Invoke(user, $"[File nhận từ {user}] {fileName}\n{content}");
+            }
             else if (msg.StartsWith("[LIST]|"))
             {
                 string[] names = msg.Substring(7).Split(',');

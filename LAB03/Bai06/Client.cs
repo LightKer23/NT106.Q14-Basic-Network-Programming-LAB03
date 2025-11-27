@@ -29,6 +29,7 @@ namespace Bai06
         {
             try
             {
+                btnConnect.Enabled = false;
                 btnOutRoom.Enabled = true;
                 btnGui.Enabled = true;
                 txtMessage.Enabled = true;
@@ -81,7 +82,12 @@ namespace Bai06
                     this.Invoke(new Action(() =>
                     {
                         if (user == _userName) return;
-                        lstTroChuyen.Items.Add($"{user}: {text}");
+                        var lines = text.Split('\n');
+                        lstTroChuyen.Items.Add($"{user}:");
+                        foreach (var line in lines)
+                        {
+                            lstTroChuyen.Items.Add("   " + line.Trim());
+                        }
                     }));
                 };
 
@@ -210,6 +216,31 @@ namespace Bai06
         private void Client_FormClosing(object sender, FormClosingEventArgs e)
         {
             _client?.Disconnect();
+        }
+
+        private void btnBrowse_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Title = "Chọn file TXT";
+            ofd.Filter = "Text Files (*.txt)|*.txt";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = ofd.FileName;
+                string fileName = Path.GetFileName(filePath);
+                string content = File.ReadAllText(filePath);
+                string base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(content));
+                _client.Send($"[FILE]|{_userName}|{fileName}|{base64}");
+
+
+                lstTroChuyen.Items.Add($"Bạn đã gửi file {fileName}:");
+
+                var lines = content.Split('\n');
+                foreach (var line in lines)
+                {
+                    lstTroChuyen.Items.Add("   " + line.Trim());
+                }
+            }
         }
     }
 }

@@ -135,6 +135,16 @@ namespace Bai06.TCPSocket
 
                         SendPrivateRoomReady(from, to, roomId);
                     }
+                    else if (message.StartsWith("[FILE]|"))
+                    {
+                        var parts = message.Split('|');
+                        string user = parts[1];
+                        string fileName = parts[2];
+                        string base64 = parts[3];
+                        string content = Encoding.UTF8.GetString(Convert.FromBase64String(base64));
+                        OnMsg?.Invoke(user, $"gửi file {fileName}:\n{content}");
+                        Broadcast(message, client);
+                    }
                     else if (message.StartsWith("[PRIVATE_INVITE]|"))
                     {
                         var parts = message.Split('|');
@@ -255,8 +265,6 @@ namespace Bai06.TCPSocket
 
 
 
-
-        ///////////////////////////////////////////////////////
         private int _roomCounter = 1;
         private List<(int id, string user1, string user2)> _privateRooms = new List<(int, string, string)>();
 
